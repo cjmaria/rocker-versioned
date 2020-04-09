@@ -28,6 +28,15 @@ RUN apt-get update \
     python-setuptools \
     sudo \
     wget \
+    libpng-dev\
+    libjq-dev \
+    libxml2-dev \
+    libv8-dev \
+    libudunits2-dev \
+    libprotobuf-dev \
+    protobuf-compiler \
+    libgeos-dev \
+    libgdal-dev \
   && if [ -z "$RSTUDIO_VERSION" ]; \
     then RSTUDIO_URL="https://www.rstudio.org/download/latest/stable/server/bionic/rstudio-server-latest-amd64.deb"; \
     else RSTUDIO_URL="http://download2.rstudio.org/server/bionic/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb"; fi \
@@ -97,5 +106,14 @@ EXPOSE 8787
 
 ## automatically link a shared volume for kitematic users
 VOLUME /home/rstudio/kitematic
+
+RUN export ADD=shiny && bash /etc/cont-init.d/add
+RUN Rscript -e 'install.packages("plotly")'
+RUN Rscript -e 'install.packages("dplyr")'
+RUN Rscript -e 'install.packages("geojsonio")'
+RUN Rscript -e 'install.packages("htmltools")'
+RUN Rscript -e 'install.packages("leaflet")'
+RUN Rscript -e 'install.packages("leaflet.extras")'
+RUN Rscript -e 'install.packages("tidyverse")'
 
 CMD ["/init"]
